@@ -1,27 +1,13 @@
-import {createContext, useReducer} from "react"
- 
-const INITIAL_STATE = {
-    user : null, 
-    isFetching: false, 
-    error: flase
-}
+export const LoginStart = (userCredentials) => ({
+    type: "LOGIN_START"
+});
 
-export const AuthContext = createContext(INITIAL_STATE);
-export const AuthContextProvider = ({children}) => {
-    const [state, dispatch] = useReducer(AuthContext, INITIAL_STATE);
+export const LoginSuccess = (user) => ({
+    type: "LOGIN_SUCCESS",
+    payload: user,
+});
 
-    return (
-        <AuthContext.Provider value={{
-            user:state.user, 
-            isFetching:state.isFetching, 
-            error:state.error,
-            dispatch
-
-        }}>  
-        {children}
-    </AuthContext.Provider>
-    )
-
-
-
-} 
+export const LoginFailure = (error) => ({
+    type: "LOGIN_FAILURE", 
+    payload: error,
+});
