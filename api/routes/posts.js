@@ -1,9 +1,9 @@
 const User = require("../models/User");
 const router = require("express").Router();
-const Post = require("../models/Post")
+const Post = require("../models/Post");
 
-    //create a post
- router.post("/", async (req, res) => {
+//create a post
+router.post("/", async (req, res) => {
   const newPost = new Post(req.body);
   try {
     const savedPost = await newPost.save();
@@ -11,10 +11,10 @@ const Post = require("../models/Post")
   } catch (err) {
     res.status(500).json(err);
   }
- });
+});
 
-    //update a post
-    router.put("/:id", async (req, res) => {
+//update a post
+router.put("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (post.userId === req.body.userId) {
@@ -28,7 +28,7 @@ const Post = require("../models/Post")
   }
 });
 
-  //delete a post
+//delete a post
 router.delete("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -42,9 +42,9 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
-    // like a post
-    router.put("/:id/like", async (req, res) => {
-    try {
+// like a post
+router.put("/:id/like", async (req, res) => {
+  try {
     const post = await Post.findById(req.params.id);
     if (!post.likes.includes(req.body.userId)) {
       await post.updateOne({ $push: { likes: req.body.userId } });
@@ -58,7 +58,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-  //get a post
+//get a post
 
 router.get("/:id", async (req, res) => {
   try {
@@ -80,7 +80,7 @@ router.get("/timeline/:userId", async (req, res) => {
         return Post.find({ userId: friendId });
       })
     );
-    res.status(200).json(userPosts.concat(...friendPosts))
+    res.status(200).json(userPosts.concat(...friendPosts));
   } catch (err) {
     res.status(500).json(err);
   }
@@ -90,9 +90,9 @@ router.get("/timeline/:userId", async (req, res) => {
 
 router.get("/profile/:username", async (req, res) => {
   try {
-        const user =  await User.findOne({username:req.params.username});
-        const posts = await Post.find({userId:user._id}); 
-        res.status(200).json(posts);
+    const user = await User.findOne({ username: req.params.username });
+    const posts = await Post.find({ userId: user._id });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);
   }
