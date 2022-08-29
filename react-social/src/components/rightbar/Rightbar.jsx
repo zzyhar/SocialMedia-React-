@@ -5,6 +5,8 @@ import Online from "../online/Online";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 export default function Rightbar({ user }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -25,6 +27,23 @@ export default function Rightbar({ user }) {
     };
     getFriends();
   }, [user]);
+
+  const handleClick = async () => {
+    try {
+      if (followed) {
+        await axios.put(`/users/${user._id}/unfollow`, {
+          userId: currentUser._id,
+        });
+        dispatch({ type: "UNFOLLOW", payload: user._id });
+      } else {
+        await axios.put(`/users/${user._id}/follow`, {
+          userId: currentUser._id,
+        });
+        dispatch({ type: "FOLLOW", payload: user._id });
+      }
+      setFollowed(!followed);
+    } catch (err) {}
+  };
 
   const HomeRightbar = () => {
     return (
@@ -49,6 +68,12 @@ export default function Rightbar({ user }) {
   const ProfileRightbar = () => {
     return (
       <>
+        {user.username !== currentUser.username && (
+          <button className="rightbarFollowButton" onClick={handleClick}>
+            {followed ? "Unfollow" : "Follow"}
+            {followed ? <RemoveIcon /> : <AddIcon />}
+          </button>
+        )}
         <h4 className="rightbarTitle"> User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
